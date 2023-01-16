@@ -1,0 +1,212 @@
+{% extends 'layouts/default.html'%}
+{%block body%}        
+    <p>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+    </p>
+    <!-- <div style ="display:flex;"> -->
+    <div class="container">
+        <div class="parties">
+            <div class="ligne1">
+                
+            
+                <p class="theme">Requête</p>
+                <p class="theme">Choix de descripteur</p>
+                <p class="theme">Recherche</p>
+                <p class="theme">Rappel/Precision</p>
+            </div>
+            
+            <div class="ligne2">
+                <form method="post" action="/" enctype="multipart/form-data">
+                    <dl>
+                        <p>
+                            <input type="file" name="file" class="form-control" autocomplete="off" required/>
+                        </p>
+                    </dl>
+                    <p>
+                        <input type="submit" name="action" value="Submit"/>
+                    </p>
+                </form>
+    <!--             <div class="btn_charger">
+                    <span>Charger</span>
+                    <input type="file" id="upload_file" name="">
+                </div>
+     -->        <form method="post" action="/" >
+                    <div class="descripteurs_ligne2">
+                    <div class="ligne_descripteur">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="BGR">
+                            <label class="form-check-label" for="horns">BGR</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="HSV">
+                            <label class="form-check-label" for="horns">HSV</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="HOG">
+                            <label class="form-check-label" for="horns">HOG</label>
+                        </div>
+                        
+                    </div>
+    
+                    <div class="ligne_descripteur">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="SIFT">
+                            <label class="form-check-label" for="horns">SIFT</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="ORB">
+                            <label class="form-check-label" for="horns">ORB</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="Mom" disabled>
+                            <label class="form-check-label" for="horns">Mom.</label>
+                        </div>
+                    </div>
+    
+                    <div class="ligne_descripteur">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="LBP">
+                            <label class="form-check-label" for="horns">LBP</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="GLCM">
+                            <label class="form-check-label" for="horns">GLCM</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="horns" name="horns" value="Autre" disabled>
+                            <label class="form-check-label" for="horns">Autre</label>
+                        </div>
+                    </div>
+                    {% if filename %}
+                    <div>
+                        <input class="btn_charger_desc" type="submit" name="action" value="Charger descripteurs classe"/>
+                    </div>
+                    <div>
+                        <input class="btn_charger_desc" type="submit" name="action" value="Charger descripteurs sous-classe"/>
+                    </div>
+                    {% endif %}
+                    {% if descripteurs %}
+                        {{ descripteurs }}
+                    {% endif %}
+                </form>
+                
+                </div>
+                
+                <form method="post" action="/" >
+                    <div class="recherche" >
+                        <div class="form-group">
+                            {% if descripteurs %}
+                                {% for desc in descripteurs %}
+                                    <div class="select">
+                                        <label for="distance-select">Distance pour {{ desc }}:</label>
+                                        <select class="select_distance" name="distances" id="distance-select">
+                                        <option value="">--Veuillez choisir une option--</option>
+                                        {% if desc == "SIFT" or desc == "ORB"%}
+                                            <option value="Brute force"> Brute Force Matcher</option>
+                                            <option value="Flann"> Flann</option>
+                                        {% elif desc == "BGR" or desc == "HSV" or desc == "GLCM" or desc == "HOG" or desc == "LBP" %}
+                                            <option value="Euclidienne">Euclidéenne</option>
+                                            <option value="Correlation">Corrélation</option>
+                                            <option value="Chicarre">Chi-square</option>
+                                            <option value="Intersection">Intersection</option>
+                                            <option value="Bhattacharyya">Bhattacharyya</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="select">
+                                    <label for="distance-select">Distance:</label>
+                                    <select class="select_distance" name="distances" id="distance-select">
+                                    <option value="">--Veuillez choisir une option--</option>
+                                </select>
+                            </div>
+                            {% endif %}
+                            
+                            
+                            <div class="select">
+                                <label for="top-select">Top:</label>
+            
+                                <select class="select_top" name="top" id="top-select">
+                                    <option value="">--Veuillez choisir une option--</option>
+                                    {% if niveau == 2 %}
+                                    <option value="20"> Top 20</option>
+                                    <option value="50"> Top 50</option>
+                                    <option value="100"> Top 100</option>
+                                    {% elif niveau == 1 %}
+                                    <option value="50"> Top 50</option>
+                                    <option value="100"> Top 100</option>
+                                    <option value="200"> Top 200</option>
+                                    {% endif %}
+                            </select>
+                            </div>
+                        </div>
+                    {% if descripteurs %}
+                    <input class="btn_charger_desc" type="submit" name="action" value="Recherche"/>
+                    {% endif %}
+                </form>
+                </div>
+                {% if nom_image_plus_proches %}
+                <div class="R_P_ligne2">
+                    <form method="post" action="/" >
+                        <input class="btn_courbe_R_P" type="submit" name="action" value="Calculer la courbe R/P"/>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+    
+            <div class="ligne3">
+                <p class="theme">Image requête</p>
+                <p class="theme">Résultats</p>
+                <p class="theme">Courbe R/P</p>
+            </div>
+    
+            <div class="ligne4">
+                {% if filename %}
+                <div class="affiche_img_req">
+                    <img src="{{ url_for('static',filename = '/uploads/'+filename)}}" class="img-fluid" alt="Responsive image">
+                </div>
+                {% endif %}
+                <div class="affiche_resultat">
+                    {% if nom_image_plus_proches %}
+                        {% for element in nom_image_plus_proches %}
+                        <img src="{{ url_for('static',filename = '/voisins/'+element)}}" class="img-fluid" alt="Responsive image">
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="affiche_courbe">
+                    {% if save_image %}
+                        <img src="{{ url_for('static',filename = save_image)}}" class="img-fluid" alt="Responsive image">
+                        <div>
+                            <p>Rappel : {{ rap }}</p>
+                        </div>
+                        <div>
+                            <p>Précision : {{ prec }}</p>
+                        </div>
+                        <div>
+                            <p>Average précision : {{ ave_prec }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+    
+    
+            <script>
+                function chooseFile() {
+                   document.getElementById("fileInput").click();
+                }
+        
+             </script>
+        </div>
+    </div>
+    
+
+{%endblock body%}
