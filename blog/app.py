@@ -17,7 +17,7 @@ app=Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
 
 app.secret_key = "my key"
-app.config['IMAGE_UPLOADS'] = 'C:/Users/fotso/OneDrive/Documents/MA2/Q1/Multimedia Retrieval and cloud computing/projet_cloud/projet_MIR_final2/blog/static/uploads'
+app.config['IMAGE_UPLOADS'] = '<your-directory>/static/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
